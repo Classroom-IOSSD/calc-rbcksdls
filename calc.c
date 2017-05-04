@@ -1,9 +1,15 @@
 #include <stdio.h>
 #include "operators.h"
+typedef float (*calcFunctionPointer) (float, float);
+
+float calculator (float operand1, float operand2, calcFunctionPointer calc) {
+	return calc (operand1, operand2) ;
+}
 
 int main(){
 	FILE *fp = NULL;
-	int operand1, operand2;
+	calcFunctionPointer calc = NULL;
+	float operand1, operand2;
 	char operator = ' ';
 	float result = 0;
 	int line = 0;
@@ -13,25 +19,27 @@ int main(){
 		fscanf(fp, "%d", &line);
 		
 		for(int i=0; i<line; i++) {
-			fscanf(fp, "%d %c %d",&operand1, &operator, &operand2);
+			fscanf(fp, "%f %c %f",&operand1, &operator, &operand2);
 			if(operator == ' ') {
 				return 0;
 			}
 			switch(operator) {
 				case '+':
-				result = add(operand1, operand2);
+				calc = add;
 				break;
 				case '-':
-				result = minus(operand1, operand2);
+				calc = minus;
 				break;
 				case '*':
-				result = mul(operand1, operand2);
+				calc = mul;
 				break;
 				case '/':
-				result = div(operand1, operand2);
+				calc = div;
 				break;
-			}		
-			printf("%d %c %d = %d\n",
+			}
+			result = calculator (operand1, operand2, calc);
+		
+			printf("%.0f %c %.0f = %.5f\n",
 				 operand1, operator, operand2, result);
 			operand1 = 0;
 			operator = ' ';
