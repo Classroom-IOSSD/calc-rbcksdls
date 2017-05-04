@@ -2,6 +2,7 @@
 #include "operators.h"
 typedef float (*calcFunctionPointer) (float, float);
 
+
 float calculator (float operand1, float operand2, calcFunctionPointer calc) {
 	return calc (operand1, operand2) ;
 }
